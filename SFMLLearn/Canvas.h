@@ -31,5 +31,7 @@ public:
 
 	void setDrawColor(sf::Color new_color) { draw_color = new_color; }
 
+	void clear();
+
 	void Update(sf::RenderWindow& window);
 };

@@ -1,12 +1,9 @@
 #include <SFML/Graphics.hpp>
 
-#include "Tool.h"
 #include "PaintTool.h"
-
 #include "Canvas.h"
 
 #include <memory>
-#include <iostream>
 
 int main()
 {
@@ -50,6 +47,11 @@ int main()
             case sf::Event::MouseButtonReleased:
             {
                 t->onMouseRelease();
+                break;
+            }
+            case sf::Event::KeyPressed:
+            {
+                canvas.clear();
                 break;
             }
             default:

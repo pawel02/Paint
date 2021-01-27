@@ -17,6 +17,11 @@ Canvas::Canvas(float width = 800.0f, float height = 600.0f,
 	m_rectangle.setPosition(offsetX, offsetY);
 }
 
+void Canvas::clear()
+{
+	m_image.create(width, height, default_color);
+}
+
 void Canvas::changePixel(int x, int y)
 {
 	//check to make sure that you are within bounds

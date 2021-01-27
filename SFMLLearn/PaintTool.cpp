@@ -1,6 +1,7 @@
 #include "PaintTool.h"
 
 #include <iostream>
+#include <cmath>
 
 PaintTool::PaintTool(Canvas* canvas) noexcept
 	:Tool{ canvas }, state{0}
@@ -10,7 +11,7 @@ void PaintTool::onMouseClick(int x, int y)
 {
 	state = BIT(0);
 
-	canvas->changePixel(x, y);
+	paint_radius(x, y);
 
 	lastPos = sf::Vector2i{ x, y };
 }
@@ -19,7 +20,7 @@ void PaintTool::onMouseMoved(int x, int y)
 {
 	if ((state & BIT(0)) > (char)0)
 	{
-		canvas->changePixel(x, y);
+		paint_radius(x, y);
 
 		double dy = static_cast<double>(y - lastPos.y);
 		double dx = static_cast<double>(x - lastPos.x);
@@ -35,14 +36,14 @@ void PaintTool::onMouseMoved(int x, int y)
 				{
 					for (size_t i = y; i > lastPos.y; i--)
 					{
-						canvas->changePixel((i - c) / grad, i);
+						paint_radius((i - c) / grad, i);
 					}					
 				}
 				else if (dy < 0)
 				{
 					for (size_t i = y; i < lastPos.y; i++)
 					{
-						canvas->changePixel((i - c) / grad, i);
+						paint_radius((i - c) / grad, i);
 					}
 				}
 
@@ -50,14 +51,14 @@ void PaintTool::onMouseMoved(int x, int y)
 				{
 					for (size_t i = x; i > lastPos.x; i--)
 					{
-						canvas->changePixel(i, (grad * i) + c);
+						paint_radius(i, (grad * i) + c);
 					}
 				}
 				else if (dx < 0)
 				{
 					for (size_t i = x; i < lastPos.x; i++)
 					{
-						canvas->changePixel(i, (grad * i ) + c);
+						paint_radius(i, (grad * i ) + c);
 					}
 				}
 		}
@@ -68,14 +69,14 @@ void PaintTool::onMouseMoved(int x, int y)
 			{
 				for (size_t i = y; i > lastPos.y; i--)
 				{
-					canvas->changePixel(x, i);
+					paint_radius(x, i);
 				}
 			}
 			else if (dy < 0)
 			{
 				for (size_t i = y; i < lastPos.y; i++)
 				{
-					canvas->changePixel(x, i);
+					paint_radius(x, i);
 				}
 			}
 		}
@@ -89,4 +90,21 @@ void PaintTool::onMouseMoved(int x, int y)
 void PaintTool::onMouseRelease()
 {
 	state ^= BIT(0);
+}
+
+void PaintTool::paint_radius(int x, int y)
+{
+	// square drawing
+	for (size_t i = 0; i < size; i++)
+	{
+		for (size_t z = 0; z < size; z++)
+		{
+			canvas->changePixel(x + z, y + i);
+			canvas->changePixel(x + z, y - i);
+
+			canvas->changePixel(x - z, y + i);
+			canvas->changePixel(x - z, y - i);
+		}
+	}
+
 }
