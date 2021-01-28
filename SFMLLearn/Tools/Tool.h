@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "Canvas.h"
+#include "../Canvas.h"
 /*
 This just defines some events that you can subscribe to or not
 */
@@ -21,8 +21,8 @@ public:
 	virtual ~Tool() noexcept {}
 
 	//all of the events
-	virtual void onMouseClick(int x, int y) {}
-	virtual void onMouseMoved(int x, int y) {}
+	virtual void onMouseClick(float x, float y) {}
+	virtual void onMouseMoved(float x, float y) {}
 	virtual void onMouseRelease() {}
 
 };

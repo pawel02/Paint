@@ -19,6 +19,7 @@ class Canvas
 
 	sf::Color draw_color;
 public:
+	explicit Canvas() noexcept;
 
 	explicit Canvas(float width, float height, 
 		float offsetX, float offsetY, 
@@ -34,4 +35,7 @@ public:
 	void clear();
 
 	void Update(sf::RenderWindow& window);
+
+private:
+	void init();
 };

@@ -1,29 +1,34 @@
 #include <SFML/Graphics.hpp>
 
-#include "PaintTool.h"
+#include "./Tools/PaintTool.h"
 #include "Canvas.h"
 
 #include <memory>
 
 int main()
 {
-    float windowWidth = 800.0f;
-    float windowHeight = 600.0f;
+    const float windowWidth = 800.0f;
+    const float windowHeight = 600.0f;
 
     // Create the main window
-    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "SFML window");
-    window.setFramerateLimit(60.0f);
+    sf::RenderWindow window(sf::VideoMode(static_cast<unsigned int>(windowWidth), static_cast<unsigned int>(windowHeight)), "Paint");
+
+    //limit to 60fps for now
+    window.setFramerateLimit(60);
 
 
     Canvas canvas{ windowWidth, windowHeight, 0, 0, sf::Color::White, sf::Color::Black };
 
-    std::unique_ptr<Tool> t = std::make_unique<PaintTool>(&canvas);
+    Options opt{ 10, 900 };
+    std::unique_ptr<Tool> t = std::make_unique<PaintTool>(&canvas, &opt);
+
+    // Process events
+    sf::Event event;
 
     // Start the game loop
     while (window.isOpen())
     {
-        // Process events
-        sf::Event event;
+        
         while (window.pollEvent(event))
         {
             // Pass all the events to the tools
@@ -36,12 +41,12 @@ int main()
             }
             case sf::Event::MouseButtonPressed:
             {
-                t->onMouseClick(event.mouseButton.x, event.mouseButton.y);
+                t->onMouseClick(static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y));
                 break;
             }
             case sf::Event::MouseMoved:
             {
-                t->onMouseMoved(event.mouseMove.x, event.mouseMove.y);
+                t->onMouseMoved(static_cast<float>(event.mouseMove.x), static_cast<float>(event.mouseMove.y));
                 break;
             }
             case sf::Event::MouseButtonReleased:

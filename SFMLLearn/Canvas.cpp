@@ -1,16 +1,31 @@
 #include "Canvas.h"
 
-Canvas::Canvas(float width = 800.0f, float height = 600.0f,
-	float offsetX = 0.0f, float offsetY = 0.0f,
-	sf::Color defaultColor = sf::Color(0.0f, 0.0f, 0.0f),
-	sf::Color draw_color = sf::Color(0.0f, 0.0f, 0.0f)) noexcept
+Canvas::Canvas() noexcept
+	:offsetX{ 0.0f }, offsetY{ 0.0f }, width{ 800.0f },
+	height{ 600.0f }, m_rectangle({ 800.0f, 600.0f }),
+	default_color{ sf::Color::White },
+	draw_color{ sf::Color::Black }
+{
+	init();
+}
+
+Canvas::Canvas(float width, float height,
+	float offsetX, float offsetY,
+	sf::Color defaultColor,
+	sf::Color draw_color) noexcept
 
 	:offsetX{ offsetX }, offsetY{offsetY},width{width}, 
 	height{ height }, m_rectangle({ width, height }),
-	default_color{defaultColor}
+	default_color{defaultColor},
+	draw_color{draw_color}
 
 {
-	m_image.create(width, height, default_color);
+	init();
+}
+
+void Canvas::init() 
+{
+	m_image.create(static_cast<unsigned int>(width), static_cast<unsigned int>(height), default_color);
 
 	m_texture.loadFromImage(m_image);
 	m_rectangle.setTexture(&m_texture);
@@ -19,7 +34,7 @@ Canvas::Canvas(float width = 800.0f, float height = 600.0f,
 
 void Canvas::clear()
 {
-	m_image.create(width, height, default_color);
+	m_image.create(static_cast<unsigned int>(width), static_cast<unsigned int>(height), default_color);
 }
 
 void Canvas::changePixel(int x, int y)
