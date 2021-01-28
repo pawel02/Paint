@@ -1,0 +1,5 @@
+Create an app state system
+allow the canvas to move due to offsets
+
+Think about how you can add different options for different tools e.g. brush size 
+color brush type (square, circle)etc

@@ -9,7 +9,7 @@ class PaintTool : public virtual Tool
 	char state = 0;
 
 	sf::Vector2i lastPos;
-	uint8_t size = 3;
+	uint8_t size = 10;
 public:
 	PaintTool() = delete;
 	explicit PaintTool(Canvas* canvas) noexcept;

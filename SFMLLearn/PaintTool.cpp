@@ -20,65 +20,25 @@ void PaintTool::onMouseMoved(int x, int y)
 {
 	if ((state & BIT(0)) > (char)0)
 	{
-		paint_radius(x, y);
+		
 
 		double dy = static_cast<double>(y - lastPos.y);
 		double dx = static_cast<double>(x - lastPos.x);
-		if (dx != 0)
-		{
-				//interpolate all of the values between the current pos and the last pos
-				//find the gradient
-				double grad = dy / dx;
-				double c = y - (grad * x);
 
-				//find all of the y pos
-				if (dy > 0)
-				{
-					for (size_t i = y; i > lastPos.y; i--)
-					{
-						paint_radius((i - c) / grad, i);
-					}					
-				}
-				else if (dy < 0)
-				{
-					for (size_t i = y; i < lastPos.y; i++)
-					{
-						paint_radius((i - c) / grad, i);
-					}
-				}
+		double length = std::sqrt(dx * dx + dy * dy);
+		
+		//calc normal vector
+		float normX = dx / length;
+		float normY = dy / length;
 
-				if (dx > 0)
-				{
-					for (size_t i = x; i > lastPos.x; i--)
-					{
-						paint_radius(i, (grad * i) + c);
-					}
-				}
-				else if (dx < 0)
-				{
-					for (size_t i = x; i < lastPos.x; i++)
-					{
-						paint_radius(i, (grad * i ) + c);
-					}
-				}
-		}
-		else
+		sf::Vector2f cursorPos{ static_cast<float>(x), static_cast<float>(y) };
+
+		for (size_t i = 0; i < length; i++)
 		{
-			//in case there was a change in why but not x
-			if (dy > 0)
-			{
-				for (size_t i = y; i > lastPos.y; i--)
-				{
-					paint_radius(x, i);
-				}
-			}
-			else if (dy < 0)
-			{
-				for (size_t i = y; i < lastPos.y; i++)
-				{
-					paint_radius(x, i);
-				}
-			}
+			paint_radius(cursorPos.x, cursorPos.y);
+
+			//move by normal vector to the desired location
+			cursorPos -= {normX, normY};
 		}
 
 		lastPos = sf::Vector2i{ x, y };
@@ -92,10 +52,10 @@ void PaintTool::onMouseRelease()
 	state ^= BIT(0);
 }
 
-void PaintTool::paint_radius(int x, int y)
+void PaintTool::paint_radius(int PosX, int PosY)
 {
 	// square drawing
-	for (size_t i = 0; i < size; i++)
+	/*for (size_t i = 0; i < size; i++)
 	{
 		for (size_t z = 0; z < size; z++)
 		{
@@ -104,6 +64,27 @@ void PaintTool::paint_radius(int x, int y)
 
 			canvas->changePixel(x - z, y + i);
 			canvas->changePixel(x - z, y - i);
+		}
+	}*/
+
+	//circle drawing
+	for (int y = -size; y <= size; y++)
+	{
+		for (int x = -size; x <= size; x++)
+		{
+			int actualX = PosX + x;
+			int actualY = PosY + y;
+
+			int dx = PosX - actualX;
+			int dy = PosY - actualY;
+
+			if (std::sqrt(dx * dx + dy * dy) <= size)
+			{
+				canvas->changePixel(
+					actualX,
+					actualY
+				);
+			}
 		}
 	}
 
